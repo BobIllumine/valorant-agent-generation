@@ -30,6 +30,7 @@ class ValorantScrapper:
         self.agents_dict = defaultdict().fromkeys(ValorantScrapper.agents_list)
         os.makedirs(self.out_dir, exist_ok=True)
         fandom.set_wiki('valorant')
+        fandom.set_rate_limiting(rate_limit=False)
 
     def __getitem__(self, item: str) -> tuple[pd.DataFrame, str] | None:
         if self.agents_dict.get(item) is None:
@@ -49,16 +50,10 @@ class ValorantScrapper:
         assert name in ValorantScrapper.agents_list
         page = fandom.page(name)
         needed_sections = ['Biography', 'Personality', 'Appearance', 'Abilities', 'Relations']
-        ability_map = {
-            'C': '',
-            'Q': '',
-            'E': '',
-            'X': ''
-        }
         raw_text = name
         raw_list = []
         for sec in needed_sections:
-            if page.section(sec) is None:
+            if page.section(sec) is None or len(page.section(sec)) == 0:
                 continue
             raw_text += f'\n\n{sec}\n'
             # Get rid of all links
@@ -72,7 +67,7 @@ class ValorantScrapper:
                 lines = lines[4:]
                 first_cleanup = '\n'.join(lines)
                 # Get rid of `Timeline of Events` part (since it is poorly structured)
-                first_cleanup = re.sub(r'[^\n]*Early life.*', '', first_cleanup, flags=re.IGNORECASE | re.DOTALL)
+                first_cleanup = re.sub(r'[^\n]*Early Life.*', '', first_cleanup, flags=re.DOTALL)
             # Get rid of all references
             second_cleanup = re.sub(r'\[.+\]', '', first_cleanup)
             third_cleanup = second_cleanup.removeprefix(f'{sec}\n')
@@ -86,7 +81,7 @@ class ValorantScrapper:
             df.to_csv(
                 os.path.join(self.out_dir, 'agents', name, f'{name}.csv'),
                 header=True,
-                index=False
+                index=True
             )
             with open(os.path.join(self.out_dir, 'agents', name, f'{name}.txt'), 'w') as f:
                 f.write(raw_text)
@@ -98,10 +93,11 @@ class ValorantScrapper:
         for agent in ValorantScrapper.agents_list:
             dfs.append(self[agent][0])
         agents = pd.concat(dfs, axis=0)
+        agents = agents.set_index(['title', 'heading'])
         if self.persist:
             agents.to_csv(
                 os.path.join(self.out_dir, 'agents', f'{out_name}.csv'),
-                index=False, header=True
+                index=True, header=True
             )
         return agents
 
@@ -110,8 +106,9 @@ class ValorantScrapper:
         scrapper = ValorantScrapper(path)
         for file in os.listdir(os.path.join(path, 'agents')):
             if os.path.isdir(os.path.join(path, 'agents', file)):
-                with open(f'{file}.txt') as f:
-                    scrapper.agents_dict[file] = [pd.read_csv(f'{file}.csv'), f.read()]
+                with open(os.path.join(path, 'agents', file, f'{file}.txt')) as f:
+                    scrapper.agents_dict[file] = [pd.read_csv(os.path.join(path, 'agents', file, f'{file}.csv')), f.read()]
+        return scrapper
 
     def __del__(self):
         if not self.persist and os.path.exists(self.out_dir):
