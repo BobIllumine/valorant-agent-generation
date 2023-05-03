@@ -49,25 +49,25 @@ class CharacterGenerator:
 
             sections.append(CharacterGenerator.SEPARATOR + doc_section.content.replace("\n", " "))
 
-        header = 'Generate a new Valorant with the given traits. ' \
-                 'Give name, role, lore (how they ended up in Valorant), ' \
-                 'abilities (C, Q, E, X. be creative, but make them fit into Valorant\'s meta), ' \
-                 'appearance (make it more interesting) and ' \
-                 'relationships with other agents (maximum three, be creative)'\
-                 'Use the given context as a reference but do not copy it. \n\nContext:\n'
+        header = """Generate a completely new Valorant with the given traits (do not base on existing characters).
+                 Give name (be original), role, lore (how they ended up in Valorant),
+                 appearance (medium to long hair, omit civilian cloths and weapons) and
+                 Abilities (C, Q, E, X. name abilities. be unrepeated. based on role, biography, appearance and personality. no repetition, be creative, fit into Valorant's meta (nothing overpowered, no time travel, no slowing down time)),
+                 relationships with other agents (maximum three, be creative)
+                 Use the given context as a reference but do not copy it. \n\nContext:\n"""
 
         fmt = """\n\n Use the following format for your answer. 
-                Name: 
-                Codename: 
+                Name (be inspiring): 
+                Codename (be original): 
                 Role: 
-                Appearance:
-                Biography:
+                Appearance (less traditional):
                 Personality: 
-                Abilities:
+                Abilities (no nonsense):
                 C - 
                 Q - 
                 E - 
-                X - 
+                X (bring something new) - 
+                Biography (first about background then introduce details about their abilities then valorant):
                 Relationships:"""
         prompt = header + "".join(sections) + fmt + "\n\n Traits: " + query + "\n A:"
         response = openai.Completion.create(

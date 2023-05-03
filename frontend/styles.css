@@ -1,0 +1,74 @@
+body {
+    background-color: #0e1922;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  /* #inputForm{
+    size:500;
+  } */
+  input[type="text"] {
+    width: 300px; 
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #2b2a29;
+    color: #ffffff;
+    font-size: 16px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #ff4655;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #output {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
+  }
+  
+  #outputText {
+    font-size: 16px;
+    margin-bottom: 10px;
+    margin-right: 50px;
+  }
+  
+  #outputImage {
+    max-width: 500px; /* Set the desired width for the image */
+    max-height: 1000px;
+    /* height: 500px; */
+    /* max-width: 100%;
+    height: auto; */
+    /* margin-left: auto; */
+    margin-right: 50px;
+    /* margin-top: 20px; */
+  }
+
+  /* .output-container {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 20px;
+  } */
+
+#loading-icon {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Add styles as per your preference */
+}

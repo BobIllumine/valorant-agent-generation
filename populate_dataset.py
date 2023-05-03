@@ -268,7 +268,7 @@ if os.path.exists(os.path.join(path_to_wiki, 'all.csv')):
 else:
     df = scr.all_agents()
 
-openai_key = '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'
+openai_key = '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'
 
 emb = Embedder(openai_key)
 
@@ -287,4 +287,4 @@ p_role, p_country, p_sex = args.role if args.role != 'random' else random.choice
 # for i in range(20):
 prompt = f"""Role: {p_role}, Country: {p_country}, Sex: {p_sex}"""
 gen = CharacterGenerator(openai_key, emb)
-print(gen(prompt, df, max_tokens=800, temperature=0.4))
+print(gen(prompt, df, max_tokens=800, temperature=0.7))
